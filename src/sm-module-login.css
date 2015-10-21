@@ -1,0 +1,46 @@
+/**
+ * Config
+ */
+:root {
+
+  --modal-width: 350px;
+
+}
+
+:host {
+  @apply(--typography);
+  text-align: center;
+}
+
+.login__title {
+  font-size: 42px;
+  color: var(--blue);
+  font-weight: 900;
+  margin-bottom: 18px;
+}
+
+.login__form__input {
+  display: inline-block;
+  text-align: center;
+  width: 170px;
+  font-size: 18px;
+  margin: 18px auto;
+  padding: 12px 0;
+  border-bottom: 2px solid var(--light-black);
+  transition: width 70ms ease-in-cubic;
+  overflow: auto;
+}
+
+.login__form__input:focus {
+  border-bottom-color: var(--blue);
+  width: 85%;
+}
+
+.login__form__submit {
+  dispaly: inline-block;
+  background: var(--blue);
+  color: white;
+  border-radius: 999px;
+  padding: 0 35px;
+  margin: 30px auto 0;
+}
