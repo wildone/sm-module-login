@@ -35,15 +35,15 @@
         });
 
         it('calles _handleError when error property added', function(){
-          sinon.stub('_handeError');
+          sinon.stub(component, '_handleError');
           component.error = false;
           component.error = true;
 
-          expect(component._handError.called).to.be.true;
+          expect(component._handleError.called).to.be.true;
         });
 
         it('calles _clearError when error property removed', function(){
-          sinon.stub('_clearError');
+          sinon.stub(component, '_clearError');
           component.error = true;
           component.error = false;
 
