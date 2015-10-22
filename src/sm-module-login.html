@@ -3,14 +3,14 @@
     <style include="sm-css"></style>
     <link rel="stylesheet" href="./sm-module-login.css" />
 
-    <sm-helper-modal class="login">
+    <sm-helper-modal class="login" active>
       <h1 class="login__title">Login</h1>
 
       <form on-submit="login" class="login__form" id="form">
         <div id="error" class="login__error"></div>
         <input id="email" class="login__form__input" value={{email::input}} type="text" placeholder="Enter your username" />
         <input id="password" class="login__form__input" value={{password::input}} type="password" placeholder="Enter your password"/>
-        <sm-helper-button id="submit" class="login__form__submit">Let's Go</sm-helper-button>
+        <sm-helper-button id="submit" class="login__form__submit">Let's go</sm-helper-button>
       </form>
 
 

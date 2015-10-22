@@ -39,6 +39,7 @@
 .login__form__submit {
   dispaly: inline-block;
   background: var(--blue);
+  font-weight: 600;
   color: white;
   border-radius: 999px;
   padding: 0 35px;
