@@ -33,6 +33,31 @@
         it('is okay', function() {
           expect(component).to.be.ok;
         });
+
+        it('calles _handleError when error property added', function(){
+          sinon.stub('_handeError');
+          component.error = false;
+          component.error = true;
+
+          expect(component._handError.called).to.be.true;
+        });
+
+        it('calles _clearError when error property removed', function(){
+          sinon.stub('_clearError');
+          component.error = true;
+          component.error = false;
+
+          expect(component._clearError.called).to.be.true;
+        });
+
+        it('sets error message when error recieved', function() {
+          expect(component._errorMessage).to.not.be.okay;
+          component.$.auth.fire('error', {
+            code: 400
+          });
+
+          expect(component._errorMessage).to.be.okay;
+        })
       });
     </script>
   </body>
