@@ -12,9 +12,9 @@ export default {
 
   _triggerError(error) {
     if (error) {
-      this._handleError();
+      this._triggerErrorOpen();
     } else {
-      this._clearError();
+      this._triggerErrorClose();
     }
   },
 
@@ -51,7 +51,7 @@ export default {
     }
   },
 
-  _handleError(e) {
+  _triggerErrorOpen() {
     let modal = this._errorAnimations.modal,
         error = this._errorAnimations.error,
         modalAnimation;
@@ -66,7 +66,7 @@ export default {
 
   },
 
-  _clearError() {
+  _triggerErrorClose() {
     let { target:errorOutput, frames, opts } = this._errorAnimations.error,
         animation;
 

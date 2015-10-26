@@ -34,20 +34,20 @@
           expect(component).to.be.ok;
         });
 
-        it('calles _handleError when error property added', function(){
-          sinon.stub(component, '_handleError');
+        it('calls _triggerErrorOpen when error property added', function(){
+          sinon.stub(component, '_triggerErrorOpen');
           component.error = false;
           component.error = true;
 
-          expect(component._handleError.called).to.be.true;
+          expect(component._triggerErrorOpen.called).to.be.true;
         });
 
-        it('calles _clearError when error property removed', function(){
-          sinon.stub(component, '_clearError');
+        it('calls _triggerErrorClose when error property removed', function(){
+          sinon.stub(component, '_triggerErrorClose');
           component.error = true;
           component.error = false;
 
-          expect(component._clearError.called).to.be.true;
+          expect(component._triggerErrorClose.called).to.be.true;
         });
 
         it('sets error message when error recieved', function() {

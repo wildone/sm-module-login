@@ -23,6 +23,10 @@ class SmModuleLogin {
     ]
   }
 
+  _handleError() {
+    this.error = true;
+  }
+
   _authenticationChanged(value) {
     if (value) {
       this.error = false;
