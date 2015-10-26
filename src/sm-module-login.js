@@ -6,10 +6,7 @@ class SmModuleLogin {
 
     this.properties = {
       error: Boolean,
-      busy: {
-        type: Boolean,
-        reflectToAttribute: true
-      },
+      busy:Boolean,
       _errorCode: Number,
       _authenticated: {
         type: Boolean,

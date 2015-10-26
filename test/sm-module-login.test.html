@@ -69,9 +69,9 @@
           expect(component.busy).to.be.true;
         });
 
-        it('should have busy attribute when busy', function() {
+        it('should show busy state on submit button', function() {
           component.busy = true;
-          expect(component.hasAttribute('busy')).to.be.true;
+          expect(component.$.submit.hasAttribute('busy')).to.be.true;
         });
 
         it('should clear any existing error on authenticated', function() {
