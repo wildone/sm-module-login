@@ -92,6 +92,30 @@
             done();
           }, 500);
         });
+
+        describe('show / hide #error depending on error property', function() {
+          var isHidden = function(el) {
+            return window.getComputedStyle(el).display === 'none';
+          };
+
+          it('should hide on error = false', function(done) {
+            component.error = false;
+
+            setTimeout(function() {
+              expect(isHidden(component.$.error)).to.be.true;
+              done();
+            }, 500);
+          });
+
+          it('should show on error = true', function(done) {
+            component.error = true;
+
+            setTimeout(function() {
+              expect(isHidden(component.$.error)).to.be.false;
+              done();
+            }, 500);
+          });
+        });
       });
     </script>
   </body>

@@ -72,7 +72,7 @@ export default {
 
     animation = errorOutput.animate(frames.reverse(), opts);
     animation.onfinish = () => {
-      this.toggleAttribute('visible', true, errorOutput)
+      this.toggleAttribute('visible', false, errorOutput)
       this.errorMessage = '';
     }
   }
