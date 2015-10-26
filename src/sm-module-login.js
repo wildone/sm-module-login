@@ -10,6 +10,7 @@ class SmModuleLogin {
         type: Boolean,
         reflectToAttribute: true
       },
+      _errorCode: Number,
       _authenticated: {
         type: Boolean,
         observer: '_authenticationChanged'
@@ -23,8 +24,9 @@ class SmModuleLogin {
     ]
   }
 
-  _handleError() {
+  _handleError({ detail }) {
     this.error = true;
+    this._errorCode = detail.code;
   }
 
   _authenticationChanged(value) {

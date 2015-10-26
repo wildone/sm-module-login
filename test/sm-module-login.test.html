@@ -22,7 +22,11 @@
       describe('<sm-module-login>', function() {
 
         var component,
-            componentFixtures;
+            componentFixtures,
+            CODES = {
+              401: 'Wrong username or pasword',
+              500: 'Something has gone wrong on our servers'
+            };
 
         componentFixtures = window.fixtures;
 
@@ -75,6 +79,18 @@
           component.$.auth._setAuthenticated(true);
 
           expect(component.error).to.be.false;
+        });
+
+        it('should set the right error message on error', function(done) {
+          component.$.auth.fire('error', {
+            code: 500
+          });
+
+          // Wait for animation to finish
+          setTimeout(function() {
+            expect(component.$.error.textContent).to.equal(CODES[500]);
+            done();
+          }, 500);
         });
       });
     </script>

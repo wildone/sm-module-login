@@ -59,7 +59,7 @@ export default {
     modalAnimation = modal.target.animate(modal.frames, modal.opts);
 
     modalAnimation.onfinish = () => {
-      this.errorMessage = CODES[401];
+      this.errorMessage = CODES[this._errorCode];
       this.toggleAttribute('visible', true, this.$.error)
       error.target.animate(error.frames, error.opts);
     };
