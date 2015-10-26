@@ -5,7 +5,11 @@ class SmModuleLogin {
     this.is = 'sm-module-login';
 
     this.properties = {
-      error: Boolean
+      error: Boolean,
+      busy: {
+        type: Boolean,
+        reflectToAttribute: true
+      }
     }
   }
 

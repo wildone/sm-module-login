@@ -57,7 +57,18 @@
           });
 
           expect(component._errorMessage).to.be.okay;
-        })
+        });
+
+        it('is busy when auth is busy', function() {
+          expect(component.busy).to.not.be.true;
+          component.$.auth.busy = true;
+          expect(component.busy).to.be.true;
+        });
+
+        it('should have busy attribute when busy', function() {
+          component.busy = true;
+          expect(component.hasAttribute('busy')).to.be.true;
+        });
       });
     </script>
   </body>

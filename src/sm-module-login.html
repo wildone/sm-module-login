@@ -10,7 +10,7 @@
         <input id="email" class="login__form__input" value={{email::input}} type="text" placeholder="Enter your username" />
         <input id="password" class="login__form__input" value={{password::input}} type="password" placeholder="Enter your password"/>
         <div id="error" class="login__error">[[errorMessage]]</div>
-        <sm-helper-button id="submit" class="login__form__submit">Let's Go</sm-helper-button>
+        <sm-helper-button id="submit" class="login__form__submit" busy="[[busy]]">Let's Go</sm-helper-button>
       </form>
 
 
@@ -19,6 +19,7 @@
     <sm-connect-auth
       id="auth"
       on-error="_handleError"
+      busy="{{busy}}"
       >
     </sm-connect-auth>
   </template>
