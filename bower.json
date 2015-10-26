@@ -24,7 +24,8 @@
     "polymer": "^1.1.4",
     "simpla": "git@github.com:simplaio/simpla.git",
     "sm-helper-modal": "git@github.com:simplaio/sm-helper-modal.git",
-    "sm-helper-button": "git@github.com:simplaio/sm-helper-button.git"
+    "sm-helper-button": "git@github.com:simplaio/sm-helper-button.git",
+    "sm-connect-auth": "git@github.com:simplaio/sm-connect-auth.git"
   },
   "devDependencies": {
     "web-component-tester": "^3.3.22",
@@ -34,6 +35,7 @@
     "polymer/polymer.html",
     "simpla/simpla.html",
     "sm-helper-modal/sm-helper-modal.html",
-    "sm-helper-button/sm-helper-button.html"
+    "sm-helper-button/sm-helper-button.html",
+    "sm-connect-auth/sm-connect-auth.html"
   ]
 }
