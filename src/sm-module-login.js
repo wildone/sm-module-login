@@ -9,6 +9,10 @@ class SmModuleLogin {
       busy: {
         type: Boolean,
         reflectToAttribute: true
+      },
+      _authenticated: {
+        type: Boolean,
+        observer: '_authenticationChanged'
       }
     }
   }
@@ -17,6 +21,12 @@ class SmModuleLogin {
     return [
       error
     ]
+  }
+
+  _authenticationChanged(value) {
+    if (value) {
+      this.error = false;
+    }
   }
 }
 
