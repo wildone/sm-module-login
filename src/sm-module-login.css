@@ -52,6 +52,10 @@
   color: var(--med-white);
 }
 
+.login__form__submit--target {
+  display: none;
+}
+
 .login__error {
   align-items: center;
   justify-content: center;

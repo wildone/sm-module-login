@@ -26,7 +26,8 @@ class SmModuleLogin {
     ]
   }
 
-  login() {
+  login(event) {
+    event.preventDefault();
     this.$.auth.login();
   }
 

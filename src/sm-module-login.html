@@ -12,6 +12,9 @@
         <input id="password" class="login__form__input" value={{password::input}} type="password" placeholder="Enter your password"/>
         <div id="error" class="login__error">[[errorMessage]]</div>
         <sm-helper-button on-tap="login" id="submit" class="login__form__submit" busy="[[busy]]">Let's Go</sm-helper-button>
+
+        <!-- Dummy hidden submit button so that pressing return triggers a form submit -->
+        <input type="submit" class="login__form__submit--target" />
       </form>
     </sm-helper-modal>
 
