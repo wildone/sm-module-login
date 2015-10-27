@@ -93,6 +93,21 @@
           }, 500);
         });
 
+        it('should call login() on submit click', function() {
+          sinon.stub(component, 'login');
+          component.$.submit.click();
+
+          expect(component.login.called).to.be.true;
+        });
+
+        it('should bind input values to auth email / password', function() {
+          component.email = 'foobar';
+          component.password = 'secret';
+
+          expect(component.$.auth.email).to.equal(component.email);
+          expect(component.$.auth.password).to.equal(component.password);
+        });
+
         describe('show / hide #error depending on error property', function() {
           var isHidden = function(el) {
             return window.getComputedStyle(el).display === 'none';

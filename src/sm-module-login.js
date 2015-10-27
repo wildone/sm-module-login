@@ -21,6 +21,10 @@ class SmModuleLogin {
     ]
   }
 
+  login() {
+    this.$.auth.login();
+  }
+
   _handleError({ detail }) {
     this.error = true;
     this._errorCode = detail.code;
