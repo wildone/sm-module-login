@@ -81,6 +81,13 @@
           expect(component.error).to.be.false;
         });
 
+        it('should clear any existing error when busy', function() {
+          component.error = true;
+          component.busy = true;
+
+          expect(component.error).to.be.false;
+        });
+
         it('should set the right error message on error', function(done) {
           component.$.auth.fire('error', {
             code: 500

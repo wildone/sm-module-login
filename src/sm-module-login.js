@@ -6,7 +6,12 @@ class SmModuleLogin {
 
     this.properties = {
       error: Boolean,
-      busy:Boolean,
+      busy: {
+        type: Boolean,
+        observer: '_busyChanged'
+      },
+      email: String,
+      password: String,
       _errorCode: Number,
       _authenticated: {
         type: Boolean,
@@ -30,8 +35,14 @@ class SmModuleLogin {
     this._errorCode = detail.code;
   }
 
-  _authenticationChanged(value) {
-    if (value) {
+  _authenticationChanged(authenticated) {
+    if (authenticated) {
+      this.error = false;
+    }
+  }
+
+  _busyChanged(busy) {
+    if (busy) {
       this.error = false;
     }
   }
