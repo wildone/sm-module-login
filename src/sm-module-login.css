@@ -24,7 +24,7 @@
   text-align: center;
   width: 170px;
   font-size: 18px;
-  margin: 18px auto;
+  margin: 19px auto;
   padding: 12px 0;
   border-bottom: 2px solid var(--light-black);
   transition: width 70ms ease-in-cubic;
@@ -41,7 +41,31 @@
   background: var(--blue);
   font-weight: 600;
   color: white;
+  font-weight: 700;
   border-radius: 999px;
   padding: 0 35px;
-  margin: 30px auto 0;
+  margin: 21px auto 0;
+  transition: color 80ms ease;
+}
+
+.login__form__submit[busy] {
+  color: var(--med-white);
+}
+
+.login__error {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0 auto;
+  max-width: 220px;
+  font-size: 15px;
+  color: var(--red);
+  opacity: 0;
+  height: 0;
+  overflow: visible;
+  display: none;
+}
+
+.login__error[visible]{
+  display: flex;
 }

@@ -22,7 +22,11 @@
       describe('<sm-module-login>', function() {
 
         var component,
-            componentFixtures;
+            componentFixtures,
+            CODES = {
+              401: 'Wrong username or pasword',
+              500: 'Something has gone wrong on our servers'
+            };
 
         componentFixtures = window.fixtures;
 
@@ -32,6 +36,85 @@
 
         it('is okay', function() {
           expect(component).to.be.ok;
+        });
+
+        it('calls _triggerErrorOpen when error property added', function(){
+          sinon.stub(component, '_triggerErrorOpen');
+          component.error = false;
+          component.error = true;
+
+          expect(component._triggerErrorOpen.called).to.be.true;
+        });
+
+        it('calls _triggerErrorClose when error property removed', function(){
+          sinon.stub(component, '_triggerErrorClose');
+          component.error = true;
+          component.error = false;
+
+          expect(component._triggerErrorClose.called).to.be.true;
+        });
+
+        it('sets error message when error recieved', function() {
+          expect(component._errorMessage).to.not.be.okay;
+          component.$.auth.fire('error', {
+            code: 400
+          });
+
+          expect(component._errorMessage).to.be.okay;
+        });
+
+        it('is busy when auth is busy', function() {
+          expect(component.busy).to.not.be.true;
+          component.$.auth.busy = true;
+          expect(component.busy).to.be.true;
+        });
+
+        it('should show busy state on submit button', function() {
+          component.busy = true;
+          expect(component.$.submit.hasAttribute('busy')).to.be.true;
+        });
+
+        it('should clear any existing error on authenticated', function() {
+          component.error = true;
+          component.$.auth._setAuthenticated(true);
+
+          expect(component.error).to.be.false;
+        });
+
+        it('should set the right error message on error', function(done) {
+          component.$.auth.fire('error', {
+            code: 500
+          });
+
+          // Wait for animation to finish
+          setTimeout(function() {
+            expect(component.$.error.textContent).to.equal(CODES[500]);
+            done();
+          }, 500);
+        });
+
+        describe('show / hide #error depending on error property', function() {
+          var isHidden = function(el) {
+            return window.getComputedStyle(el).display === 'none';
+          };
+
+          it('should hide on error = false', function(done) {
+            component.error = false;
+
+            setTimeout(function() {
+              expect(isHidden(component.$.error)).to.be.true;
+              done();
+            }, 500);
+          });
+
+          it('should show on error = true', function(done) {
+            component.error = true;
+
+            setTimeout(function() {
+              expect(isHidden(component.$.error)).to.be.false;
+              done();
+            }, 500);
+          });
         });
       });
     </script>
