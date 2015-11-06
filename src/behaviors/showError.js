@@ -11,6 +11,10 @@ export default {
   ],
 
   _triggerError(error) {
+    if (this._errorCode === undefined) {
+      return;
+    }
+
     if (error) {
       this._triggerErrorOpen();
     } else {

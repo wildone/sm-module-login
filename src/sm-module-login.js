@@ -1,4 +1,4 @@
-import error from './behaviors/error.js';
+import showError from './behaviors/showError.js';
 
 class SmModuleLogin {
   beforeRegister() {
@@ -22,7 +22,7 @@ class SmModuleLogin {
 
   get behaviors() {
     return [
-      error
+      showError
     ]
   }
 
