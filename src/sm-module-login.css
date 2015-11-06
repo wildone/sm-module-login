@@ -12,23 +12,19 @@
   text-align: center;
 }
 
-.login__title {
-  font-size: 42px;
-  color: var(--blue);
-  font-weight: 900;
-  margin-bottom: 18px;
-}
-
 .login__form__input {
   display: inline-block;
   text-align: center;
-  width: 170px;
+  width: 85%;
   font-size: 18px;
-  margin: 19px auto;
-  padding: 12px 0;
-  border-bottom: 2px solid var(--light-black);
-  transition: width 70ms ease-in-cubic;
+  margin: 16px auto;
+  padding: 8px 0;
+  border-radius: var(--border-radius);
   overflow: auto;
+}
+
+.login__form__input:first-child {
+  margin-top: 0;
 }
 
 .login__form__input:focus {
@@ -41,8 +37,7 @@
   background: var(--blue);
   font-weight: 600;
   color: white;
-  font-weight: 700;
-  border-radius: 999px;
+  border-radius: var(--border-radius);
   padding: 0 35px;
   margin: 21px auto 0;
   transition: color 80ms ease;

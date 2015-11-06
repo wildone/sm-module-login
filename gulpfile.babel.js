@@ -3,7 +3,6 @@ import del from 'del';
 import webpack from 'webpack-stream';
 import named from 'vinyl-named';
 import autoprefixer from 'autoprefixer';
-import easings from 'postcss-easings';
 import wct from 'web-component-tester';
 import notify from 'gulp-notify';
 import gulprun from 'run-sequence';
@@ -34,7 +33,6 @@ const imports = componentImports.map(dep => `../${dep}`),
           }
         },
         postcss: [
-          easings(),
           autoprefixer()
         ],
         vulcanize: {
