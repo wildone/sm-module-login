@@ -10,6 +10,8 @@
 :host {
   @apply(--typography);
   text-align: center;
+  position: relative;
+  z-index: var(--on-top);
 }
 
 .login__form__input {
