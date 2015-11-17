@@ -23,6 +23,7 @@
   padding: 8px 0;
   border-radius: var(--border-radius);
   overflow: auto;
+  color: var(--text-color);
 }
 
 .login__form__input:first-child {
