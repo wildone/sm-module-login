@@ -3,18 +3,18 @@
     <style include="sm-css"></style>
     <link rel="stylesheet" href="./sm-module-login.css" />
 
-    <sm-helper-modal class="login" id="modal" title="Login" active>
+    <sm-ui-modal class="login" id="modal" title="Login" active>
 
       <form on-submit="login" class="login__form" id="form">
         <input id="email" class="login__form__input" value={{email::input}} type="text" placeholder="Enter your username" />
         <input id="password" class="login__form__input" value={{password::input}} type="password" placeholder="Enter your password"/>
         <div id="error" class="login__error">[[errorMessage]]</div>
-        <sm-helper-button on-tap="login" id="submit" class="login__form__submit" busy="[[busy]]">Let's Go</sm-helper-button>
+        <sm-ui-button on-tap="login" id="submit" class="login__form__submit" busy="[[busy]]">Let's Go</sm-ui-button>
 
         <!-- Dummy hidden submit button so that pressing return triggers a form submit -->
         <input type="submit" class="login__form__submit--target" />
       </form>
-    </sm-helper-modal>
+    </sm-ui-modal>
 
     <sm-connect-auth
       id="auth"
