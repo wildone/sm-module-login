@@ -40,6 +40,8 @@
 
         it('calls _triggerErrorOpen when error property added', function(){
           sinon.stub(component, '_triggerErrorOpen');
+          component._errorCode = 123;
+
           component.error = false;
           component.error = true;
 
@@ -48,6 +50,8 @@
 
         it('calls _triggerErrorClose when error property removed', function(){
           sinon.stub(component, '_triggerErrorClose');
+          component._errorCode = 123;
+          
           component.error = true;
           component.error = false;
 
