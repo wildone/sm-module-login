@@ -51,7 +51,7 @@
         it('calls _triggerErrorClose when error property removed', function(){
           sinon.stub(component, '_triggerErrorClose');
           component._errorCode = 123;
-          
+
           component.error = true;
           component.error = false;
 
@@ -80,7 +80,7 @@
 
         it('should clear any existing error on authenticated', function() {
           component.error = true;
-          component.$.auth._setAuthenticated(true);
+          component.$.auth.authenticated = true;
 
           expect(component.error).to.be.false;
         });
