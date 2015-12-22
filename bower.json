@@ -25,7 +25,7 @@
     "simpla-core": "git@github.com:simplaio/simpla-core.git",
     "sm-ui-modal": "git@github.com:simplaio/sm-ui-modal.git",
     "sm-ui-button": "git@github.com:simplaio/sm-ui-button.git",
-    "sm-connect-auth": "git@github.com:simplaio/sm-connect-auth.git"
+    "sm-utility-auth": "git@github.com:simplaio/sm-utility-auth.git"
   },
   "devDependencies": {
     "web-component-tester": "^3.3.22",
@@ -36,6 +36,6 @@
     "simpla-core/simpla-core.html",
     "sm-ui-modal/sm-ui-modal.html",
     "sm-ui-button/sm-ui-button.html",
-    "sm-connect-auth/sm-connect-auth.html"
+    "sm-utility-auth/sm-utility-auth.html"
   ]
 }

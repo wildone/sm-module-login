@@ -16,7 +16,7 @@
       </form>
     </sm-ui-modal>
 
-    <sm-connect-auth
+    <sm-utility-auth
       id="auth"
       on-error="_handleError"
       busy="{{busy}}"
@@ -24,7 +24,7 @@
       email="[[email]]"
       password="[[password]]"
       >
-    </sm-connect-auth>
+    </sm-utility-auth>
   </template>
   <script src="./sm-module-login.js"></script>
 </dom-module>
