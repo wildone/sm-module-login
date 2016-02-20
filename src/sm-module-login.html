@@ -9,7 +9,7 @@
         <input id="email" class="login__form__input" value={{email::input}} type="text" placeholder="Enter your email" />
         <input id="password" class="login__form__input" value={{password::input}} type="password" placeholder="Enter your password"/>
         <div id="error" class="login__error">[[errorMessage]]</div>
-        <sm-ui-button on-tap="login" id="submit" class="login__form__submit" busy="[[busy]]">Let's Go</sm-ui-button>
+        <button is="sm-ui-button" type="submit" on-tap="login" id="submit" class="login__form__submit" busy="[[busy]]">Let's Go</button>
 
         <!-- Dummy hidden submit button so that pressing return triggers a form submit -->
         <input type="submit" class="login__form__submit--target" />
