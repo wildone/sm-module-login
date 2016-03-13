@@ -16,7 +16,7 @@
   "ignore": [
     "*",
     "!src/**/*",
-    "!sm-module-login.html",
+    "!*.html",
     "!LICENSE"
   ],
   "dependencies": {
