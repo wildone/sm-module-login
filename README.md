@@ -1,7 +1,7 @@
 # Module Login
 ![][bower-badge] [![][travis-badge]][travis-url] [![][bowerdeps-badge]][bowerdeps-url] [![][npmdevdeps-badge]][npmdevdeps-url]
 
-Convenience wrapper around [`sm-utility-auth`][utility-auth]
+UI wrapper around [`sm-utility-auth`][utility-auth]
 
 --
 
