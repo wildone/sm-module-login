@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>sm-module-login</title>
-    <script src="../../webcomponentsjs/webcomponents.min.js"></script>
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
     <script src="../../test-fixture/test-fixture-mocha.js"></script>
     <link rel="import" href="../../test-fixture/test-fixture.html">
@@ -58,10 +58,14 @@
           expect(component._triggerErrorClose.called).to.be.true;
         });
 
-        it('sets error message when error recieved', function() {
+        it('sets error message when error received', function() {
+          component.error = false;
           expect(component._errorMessage).to.not.be.okay;
-          component.$.auth.fire('error', {
-            code: 400
+          // Normally we'd dispatch the 'error' event from auth, but this causes
+          //  firefox to think a browser error occurred, and crashes.
+          // See https://github.com/webcomponents/webcomponentsjs/issues/138
+          component._handleError({
+            detail: { code: 400 }
           });
 
           expect(component._errorMessage).to.be.okay;
@@ -86,6 +90,8 @@
         });
 
         it('should clear any existing error when busy', function() {
+          // Make sure busy is false, busy observers get triggered
+          component.busy = false;
           component.error = true;
           component.busy = true;
 
@@ -93,8 +99,12 @@
         });
 
         it('should set the right error message on error', function(done) {
-          component.$.auth.fire('error', {
-            code: 500
+          component.error = false;
+          // Normally we'd dispatch the 'error' event from auth, but this causes
+          //  firefox to think a browser error occurred, and crashes.
+          // See https://github.com/webcomponents/webcomponentsjs/issues/138
+          component._handleError({
+            detail: { code: 500 }
           });
 
           // Wait for animation to finish
@@ -106,6 +116,11 @@
 
         it('should call login() on submit click', function() {
           sinon.stub(component, 'login');
+          // Stop form submission
+          component.$$('form').addEventListener('submit', function(ev) {
+            ev.preventDefault();
+          });
+
           component.$.submit.click();
 
           expect(component.login.called).to.be.true;
