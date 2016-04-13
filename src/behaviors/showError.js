@@ -1,4 +1,4 @@
-const easings = simpla.constants.easings,
+const easings = simpla._constants.easings,
       WOBBLE = '12px',
       CODES = {
         401: 'Wrong username or pasword',

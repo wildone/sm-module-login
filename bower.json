@@ -21,8 +21,8 @@
   ],
   "dependencies": {
     "webcomponentsjs": "^0.7.14",
-    "polymer": "^1.1.4",
-    "simpla-core": "https://github.com/simplaio/simpla-core.git",
+    "polymer": "^1.3.0",
+    "sm-ui-core": "https://github.com/SimplaElements/sm-ui-core.git",
     "sm-ui-modal": "https://github.com/simplaio/sm-ui-modal.git",
     "sm-ui-button": "https://github.com/simplaio/sm-ui-button.git",
     "sm-utility-auth": "https://github.com/simplaio/sm-utility-auth.git"
