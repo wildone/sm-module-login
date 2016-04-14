@@ -1,6 +1,6 @@
 {
   "name": "sm-module-login",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Login element for Simpla",
   "main": "sm-module-login.html",
   "scripts": {
