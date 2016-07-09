@@ -12,11 +12,19 @@ class SmModuleLogin {
       },
       email: String,
       password: String,
+      active: {
+        type: Boolean,
+        computed: '_computeActive(_editing, _authenticated)'
+      },
       _errorCode: Number,
       _authenticated: {
         type: Boolean,
         observer: '_authenticationChanged',
         value: Simpla.getState().authentication.authenticated
+      },
+      _editing: {
+        type: Boolean,
+        value: Simpla.getState().editing
       }
     }
   }
@@ -30,6 +38,10 @@ class SmModuleLogin {
   created() {
     Simpla.observe('authentication.authenticated', (authenticated) => {
       this._authenticated = authenticated;
+    });
+
+    Simpla.observe('editing', (editing) => {
+      this._editing = editing;
     });
   }
 
@@ -65,6 +77,10 @@ class SmModuleLogin {
     if (busy) {
       this.error = false;
     }
+  }
+
+  _computeActive(_editing, _authenticated) {
+    return _editing && !_authenticated;
   }
 }
 

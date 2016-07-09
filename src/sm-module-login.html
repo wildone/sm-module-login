@@ -9,7 +9,7 @@
     <style include="sm-css"></style>
     <link rel="stylesheet" href="./sm-module-login.css" inline/>
 
-    <sm-ui-modal class="login" id="modal" title="Login" active="[[!_authenticated]]">
+    <sm-ui-modal class="login" id="modal" title="Login" active="[[active]]">
 
       <form on-submit="login" class="login__form" id="form">
         <input id="email" class="login__form__input" value={{email::input}} type="text" placeholder="Enter your email" />

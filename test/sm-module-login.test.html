@@ -48,8 +48,12 @@
           expect(Simpla.observe.calledWith('authentication.authenticated')).to.be.true;
         });
 
+        it('should observe Simplas editing property', function() {
+          expect(Simpla.observe.calledWith('editing')).to.be.true;
+        });
+
         it('should pass a callback to observe that binds _authenticated', function() {
-          var callback = Simpla.observe.lastCall.args[1];
+          var callback = Simpla.observe.withArgs('authentication.authenticated').lastCall.args[1];
 
           expect(callback).to.be.a.function;
           component._authenticated = false;
@@ -58,12 +62,40 @@
           expect(component._authenticated).to.be.true;
         });
 
-        it('should hide / close modal if authenticated / not authenticated', function() {
-          component._authenticated = false;
-          expect(component.$.modal.active).to.be.true;
+        it('should pass a callback to observe that binds _authenticated', function() {
+          var callback = Simpla.observe.withArgs('editing').lastCall.args[1];
 
-          component._authenticated = true;
-          expect(component.$.modal.active).to.be.false;
+          expect(callback).to.be.a.function;
+          component._editing = false;
+
+          callback(true);
+          expect(component._editing).to.be.true;
+        });
+
+        it('should hide / close modal if editing and not authenticated', function() {
+          var truths = [{
+            edit: true,
+            authenticated: false,
+            active: true
+          }, {
+            edit: false,
+            authenticated: false,
+            active: false
+          }, {
+            edit: false,
+            authenticated: true,
+            active: false
+          }, {
+            edit: true,
+            authenticated: true,
+            active: false
+          }];
+
+          truths.forEach(function(truth) {
+            component._editing = truth.edit;
+            component._authenticated = truth.authenticated;
+            expect(component.$.modal.active).to.equal(truth.active);
+          });
         });
 
         it('should reset email / pass on detached', function() {
