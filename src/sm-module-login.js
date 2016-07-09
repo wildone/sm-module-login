@@ -1,5 +1,4 @@
 import showError from './behaviors/showError.js';
-import singleton from './behaviors/singleton';
 
 class SmModuleLogin {
   beforeRegister() {
@@ -16,15 +15,15 @@ class SmModuleLogin {
       _errorCode: Number,
       _authenticated: {
         type: Boolean,
-        observer: '_authenticationChanged'
+        observer: '_authenticationChanged',
+        value: Simpla.getState().authentication.authenticated
       }
     }
   }
 
   get behaviors() {
     return [
-      showError,
-      singleton
+      showError
     ];
   }
 
@@ -34,8 +33,10 @@ class SmModuleLogin {
     });
   }
 
-  ready() {
-    this._authenticated = Simpla.getState().authentication.authenticated;
+  detached() {
+    // Should reset all values so they're not persisted
+    this.email = '';
+    this.password = '';
   }
 
   login(event) {
@@ -67,4 +68,18 @@ class SmModuleLogin {
   }
 }
 
+// Register with Polymer
 Polymer(SmModuleLogin);
+
+// Setup and
+let singleton = document.createElement('sm-module-login'),
+    inject;
+
+inject = () => {
+  if (document.body) {
+    document.body.appendChild(singleton);
+    document.removeEventListener('readystatechange', inject);
+  }
+}
+
+document.addEventListener('readystatechange', inject);
