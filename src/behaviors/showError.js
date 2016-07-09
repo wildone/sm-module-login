@@ -69,11 +69,10 @@ export default {
      * Temporarily hard-code error message
      */
     modalAnimation.onfinish = () => {
-      this.errorMessage = 'Wrong username or password';
-      this.toggleAttribute('visible', true, this.$.error)
+      this.errorMessage = CODES[this._errorCode || 500];
+      this.toggleAttribute('visible', true, this.$.error);
       error.target.animate(error.frames, error.opts);
     };
-
   },
 
   _triggerErrorClose() {

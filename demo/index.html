@@ -3,16 +3,14 @@
   <head>
     <meta charset="utf-8">
     <title>sm-module-login</title>
-    <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="bower_components/simpla/simpla.js"></script>
     <script>
+      Simpla({
+        project: '',
+        elements: null
+      });
       window.Polymer = window.Polymer || {};
       window.Polymer.dom = 'shadow';
-
-      window.simpla = {
-        config: {
-          server: 'http://api.simpla.io:8000/api/v1'
-        }
-      };
     </script>
     <link rel="import" href="../sm-module-login.html" />
   </head>

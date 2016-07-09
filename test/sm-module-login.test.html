@@ -7,7 +7,9 @@
     <script src="../../web-component-tester/browser.js"></script>
     <script src="../../test-fixture/test-fixture-mocha.js"></script>
     <link rel="import" href="../../test-fixture/test-fixture.html">
+    <script>
 
+    </script>
     <!-- Import the element to test -->
     <link rel="import" href="../sm-module-login.html">
     <script src="./sm-module-login.fixtures.js"></script>
@@ -31,11 +33,30 @@
         componentFixtures = window.fixtures;
 
         beforeEach(function() {
+          window.Simpla = {
+            login: sinon.stub().returns(Promise.resolve()),
+            observe: sinon.stub()
+          };
+
           component = fixture('default');
         });
 
         it('is okay', function() {
           expect(component).to.be.ok;
+        });
+
+        it('should observe Simplas authentication.authenticated property', function() {
+          expect(Simpla.observe.calledWith('authentication.authenticated')).to.be.true;
+        });
+
+        it('should pass a callback to observe that binds _authenticated', function() {
+          let callback = Simpla.observe.lastCall.args[1];
+
+          expect(callback).to.be.a.function;
+          component._authenticated = false;
+
+          callback(true);
+          expect(component._authenticated).to.be.true;
         });
 
         it('calls _triggerErrorOpen when error property added', function(){
@@ -58,19 +79,49 @@
           expect(component._triggerErrorClose.called).to.be.true;
         });
 
-        it('sets error message when error recieved', function() {
-          expect(component._errorMessage).to.not.be.okay;
-          component.$.auth.fire('error', {
-            code: 400
-          });
+        it('sets error code when error recieved', function() {
+          var code = 401,
+              rejection = Promise.reject({ code: code });
 
-          expect(component._errorMessage).to.be.okay;
+          Simpla.login.returns(rejection);
+          expect(component._errorCode).to.not.equal(code);
+
+          return component.login().then(function() {
+            expect(component._errorCode).to.equal(code);
+          });
         });
 
-        it('is busy when auth is busy', function() {
+        it('is busy while logging in is busy', function() {
+          // Setup a promise which can be resolved at a later time
+          var forceResolve,
+              promise = new Promise(function(resolve) { forceResolve = resolve }),
+              loggingIn;
+
+          Simpla.login.returns(promise);
+
+          // Should initially not be busy
           expect(component.busy).to.not.be.true;
-          component.$.auth.busy = true;
+
+          // When login starts, should be busy
+          loggingIn = component.login();
           expect(component.busy).to.be.true;
+
+          // After resolution, shouldn't be busy
+          forceResolve();
+          return loggingIn.then(function() {
+            expect(component.busy).to.not.be.true;
+          });
+        });
+
+        it('should use current email and password to login with', function() {
+          component.email = 'email';
+          component.password = 'password';
+
+          component.login();
+          expect(Simpla.login.lastCall.args[0]).to.deep.equal({
+            email: 'email',
+            password: 'password'
+          });
         });
 
         it('should show busy state on submit button', function() {
@@ -80,7 +131,7 @@
 
         it('should clear any existing error on authenticated', function() {
           component.error = true;
-          component.$.auth.authenticated = true;
+          component._authenticated = true;
 
           expect(component.error).to.be.false;
         });
@@ -93,9 +144,8 @@
         });
 
         it('should set the right error message on error', function(done) {
-          component.$.auth.fire('error', {
-            code: 500
-          });
+          Simpla.login.returns(Promise.reject({ code: 500 }));
+          component.login();
 
           // Wait for animation to finish
           setTimeout(function() {
@@ -105,18 +155,10 @@
         });
 
         it('should call login() on submit click', function() {
-          sinon.stub(component, 'login');
+          sinon.spy(component, 'login');
           component.$.submit.click();
 
           expect(component.login.called).to.be.true;
-        });
-
-        it('should bind input values to auth email / password', function() {
-          component.email = 'foobar';
-          component.password = 'secret';
-
-          expect(component.$.auth.email).to.equal(component.email);
-          expect(component.$.auth.password).to.equal(component.password);
         });
 
         describe('show / hide #error depending on error property', function() {

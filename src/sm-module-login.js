@@ -26,14 +26,26 @@ class SmModuleLogin {
     ]
   }
 
-  login(event) {
-    event.preventDefault();
-    this.$.auth.login();
+  created() {
+    Simpla.observe('authentication.authenticated', (authenticated) => {
+      this._authenticated = authenticated;
+    });
   }
 
-  _handleError({ detail }) {
+  login(event) {
+    if (event) {
+      event.preventDefault();
+    }
+
+    this.busy = true;
+    return Simpla.login({ email: this.email, password: this.password })
+      .catch(error => this._handleError(error))
+      .then(() => this.busy = false);
+  }
+
+  _handleError(error) {
     this.error = true;
-    this._errorCode = detail.code;
+    this._errorCode = error.code;
   }
 
   _authenticationChanged(authenticated) {
