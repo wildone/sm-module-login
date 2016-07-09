@@ -1,4 +1,5 @@
 import showError from './behaviors/showError.js';
+import singleton from './behaviors/singleton';
 
 class SmModuleLogin {
   beforeRegister() {
@@ -22,14 +23,19 @@ class SmModuleLogin {
 
   get behaviors() {
     return [
-      showError
-    ]
+      showError,
+      singleton
+    ];
   }
 
   created() {
     Simpla.observe('authentication.authenticated', (authenticated) => {
       this._authenticated = authenticated;
     });
+  }
+
+  ready() {
+    this._authenticated = Simpla.getState().authentication.authenticated;
   }
 
   login(event) {

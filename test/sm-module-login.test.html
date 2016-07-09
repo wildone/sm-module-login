@@ -8,7 +8,11 @@
     <script src="../../test-fixture/test-fixture-mocha.js"></script>
     <link rel="import" href="../../test-fixture/test-fixture.html">
     <script>
-
+      window.Simpla = {
+        login: sinon.stub().returns(Promise.resolve()),
+        observe: sinon.stub(),
+        getState: sinon.stub().returns({ authentication: { authenticated: false } })
+      };
     </script>
     <!-- Import the element to test -->
     <link rel="import" href="../sm-module-login.html">
@@ -33,11 +37,6 @@
         componentFixtures = window.fixtures;
 
         beforeEach(function() {
-          window.Simpla = {
-            login: sinon.stub().returns(Promise.resolve()),
-            observe: sinon.stub()
-          };
-
           component = fixture('default');
         });
 
@@ -50,13 +49,59 @@
         });
 
         it('should pass a callback to observe that binds _authenticated', function() {
-          let callback = Simpla.observe.lastCall.args[1];
+          var callback = Simpla.observe.lastCall.args[1];
 
           expect(callback).to.be.a.function;
           component._authenticated = false;
 
           callback(true);
           expect(component._authenticated).to.be.true;
+        });
+
+        describe('singleton behavior', function() {
+          it('should attach to the body and detach based on Simpla\'s authentication', function() {
+            var instance;
+
+            sinon.spy(document.body, 'appendChild');
+            sinon.spy(document.body, 'removeChild');
+
+            component._attachOrDetach(false);
+            instance = document.body.appendChild.lastCall.args[0];
+
+            // Should have attached an instance
+            expect(instance.is).to.equal(component.is);
+
+            // We need to pretend it was attached into the body
+            component._attachOrDetach(true);
+
+            // Should have then removed that element from the body
+            expect(document.body.removeChild.calledWith(instance)).to.be.true;
+
+            document.body.appendChild.restore();
+            document.body.removeChild.restore();
+          });
+
+          it('should close / open modal when detached / attached', () => {
+            var parent = component.parentElement;
+
+            expect(component.$.modal.active).to.be.true;
+            parent.removeChild(component);
+            expect(component.$.modal.active).to.be.false;
+
+            parent.appendChild(component);
+            expect(component.$.modal.active).to.be.truel
+          });
+
+          it('should reset email / pass on detached', function() {
+            var parent = component.parentElement;
+
+            component.email = 'email';
+            component.password = 'password';
+
+            parent.removeChild(component);
+            expect(component.email).to.equal('');
+            expect(component.password).to.equal('');
+          });
         });
 
         it('calls _triggerErrorOpen when error property added', function(){
