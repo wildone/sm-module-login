@@ -6,6 +6,21 @@
     <script src="../../webcomponentsjs/webcomponents.min.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
     <script src="../../test-fixture/test-fixture-mocha.js"></script>
+    <script src="../../web-animations-js/web-animations-next.min.js"></script>
+    <script>
+      window.flushAnimations = function() {
+        var promises = document.timeline.getAnimations()
+          .map(function(animation) {
+            return new Promise(function(resolve) {
+              animation.addEventListener('finish', resolve);
+              animation.finish();
+            });
+          });
+
+        return Promise.all(promises);
+      }
+    </script>
+
     <link rel="import" href="../../test-fixture/test-fixture.html">
     <script>
       window.Simpla = {
@@ -105,8 +120,9 @@
           component.password = 'password';
 
           parent.removeChild(component);
-          expect(component.email).to.equal('');
+          Polymer.dom.flush();
           expect(component.password).to.equal('');
+          expect(component.email).to.equal('');
         });
 
         it('calls _triggerErrorOpen when error property added', function(){
@@ -193,15 +209,14 @@
           expect(component.error).to.be.false;
         });
 
-        it('should set the right error message on error', function(done) {
+        it('should set the right error message on error', function() {
           Simpla.login.returns(Promise.reject({ code: 500 }));
-          component.login();
 
-          // Wait for animation to finish
-          setTimeout(function() {
-            expect(component.$.error.textContent).to.equal(CODES[500]);
-            done();
-          }, 500);
+          return component.login()
+            .then(flushAnimations)
+            .then(function() {
+              expect(component.$.error.textContent).to.equal(CODES[500]);
+            });
         });
 
         it('should call login() on submit click', function() {
@@ -216,22 +231,22 @@
             return window.getComputedStyle(el).display === 'none';
           };
 
-          it('should hide on error = false', function(done) {
+          it('should hide on error = false', function() {
             component.error = false;
 
-            setTimeout(function() {
-              expect(isHidden(component.$.error)).to.be.true;
-              done();
-            }, 500);
+            return flushAnimations()
+              .then(function() {
+                expect(isHidden(component.$.error)).to.be.true;
+              });
           });
 
-          it('should show on error = true', function(done) {
+          it('should show on error = true', function() {
             component.error = true;
 
-            setTimeout(function() {
-              expect(isHidden(component.$.error)).to.be.false;
-              done();
-            }, 500);
+            return flushAnimations()
+              .then(function() {
+                expect(isHidden(component.$.error)).to.be.false;
+              });
           });
         });
       });
