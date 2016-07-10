@@ -20,7 +20,7 @@ class SmModuleLogin {
       _authenticated: {
         type: Boolean,
         observer: '_authenticationChanged',
-        value: Simpla.getState().authentication.authenticated
+        value: Simpla.getState().authenticated
       },
       _editing: {
         type: Boolean,
@@ -36,7 +36,7 @@ class SmModuleLogin {
   }
 
   created() {
-    Simpla.observe('authentication.authenticated', (authenticated) => {
+    Simpla.observe('authenticated', (authenticated) => {
       this._authenticated = authenticated;
     });
 

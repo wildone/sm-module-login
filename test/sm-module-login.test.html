@@ -26,7 +26,7 @@
       window.Simpla = {
         login: sinon.stub().returns(Promise.resolve()),
         observe: sinon.stub(),
-        getState: sinon.stub().returns({ authentication: { authenticated: false } })
+        getState: sinon.stub().returns({ authenticated: false })
       };
     </script>
     <!-- Import the element to test -->
@@ -59,8 +59,8 @@
           expect(component).to.be.ok;
         });
 
-        it('should observe Simplas authentication.authenticated property', function() {
-          expect(Simpla.observe.calledWith('authentication.authenticated')).to.be.true;
+        it('should observe Simplas authenticated property', function() {
+          expect(Simpla.observe.calledWith('authenticated')).to.be.true;
         });
 
         it('should observe Simplas editing property', function() {
@@ -68,7 +68,7 @@
         });
 
         it('should pass a callback to observe that binds _authenticated', function() {
-          var callback = Simpla.observe.withArgs('authentication.authenticated').lastCall.args[1];
+          var callback = Simpla.observe.withArgs('authenticated').lastCall.args[1];
 
           expect(callback).to.be.a.function;
           component._authenticated = false;
