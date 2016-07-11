@@ -1,4 +1,5 @@
 import showError from './behaviors/showError.js';
+import persistToken from './behaviors/persistToken';
 
 class SmModuleLogin {
   beforeRegister() {
@@ -31,7 +32,8 @@ class SmModuleLogin {
 
   get behaviors() {
     return [
-      showError
+      showError,
+      persistToken
     ];
   }
 
