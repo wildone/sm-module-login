@@ -31,18 +31,25 @@ function tokenIsValid(token) {
 }
 
 export default {
-  observers: [
-    '_setTokenInStorage(token)'
-  ],
+  properties: {
+    token: {
+      type: String,
+      observer: '_setTokenInStorage'
+    }
+  },
 
-  created() {
-    let tokenInStorage = window.localStorage.getItem(TOKEN_KEY);
+  ready() {
+    let tokenInStorage;
+
+    Simpla.observe('token', token => this.token = token);
+
+    tokenInStorage = window.localStorage.getItem(TOKEN_KEY);
 
     if (tokenIsValid(tokenInStorage)) {
       // WARNING: This is private and should be removed in future
       Simpla._store.dispatch({
         type: 'login-successful',
-        token: tokenInStorage
+        response: tokenInStorage
       });
     } else {
       window.localStorage.removeItem(TOKEN_KEY);
@@ -50,7 +57,6 @@ export default {
   },
 
   _setTokenInStorage(token) {
-    console.log('token', token);
     window.localStorage.setItem(TOKEN_KEY, token);
   }
 }
