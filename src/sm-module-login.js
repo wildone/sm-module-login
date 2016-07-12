@@ -84,6 +84,12 @@ class SmModuleLogin {
   _computeActive(_editing, _authenticated) {
     return _editing && !_authenticated;
   }
+
+  _handleModalClosed() {
+    if (!this._authenticated && this.active) {
+      Simpla.toggleEditing(false);
+    }
+  }
 }
 
 // Register with Polymer

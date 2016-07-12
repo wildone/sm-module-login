@@ -27,6 +27,7 @@ gul<!DOCTYPE html>
         login: sinon.stub().returns(Promise.resolve()),
         observe: sinon.stub(),
         getState: sinon.stub().returns({ authenticated: false }),
+        toggleEditing: sinon.stub(),
         _store: {
           dispatch: sinon.stub()
         }
@@ -56,6 +57,12 @@ gul<!DOCTYPE html>
 
         beforeEach(function() {
           component = fixture('default');
+        });
+
+        beforeEach(function() {
+          Simpla.login.reset();
+          Simpla.getState.reset();
+          Simpla.toggleEditing.reset();
         });
 
         it('is okay', function() {
@@ -227,6 +234,29 @@ gul<!DOCTYPE html>
           component.$.submit.click();
 
           expect(component.login.called).to.be.true;
+        });
+
+        it('should stop editing if not authenticated when closing', function() {
+          // Is active
+          component._editing = true;
+          component._authenticated = false;
+          component.$.modal.fire('closed');
+          expect(Simpla.toggleEditing.calledWith(false)).to.be.true;
+        });
+
+        it('should only toggleEditing if closing while login is active', function() {
+          // Is inactive
+          component._editing = false;
+          component._authenticated = false;
+          component.$.modal.fire('closed');
+          expect(Simpla.toggleEditing.called).to.be.false;
+        });
+
+        it('should not stop editing if authenticated when closing', function() {
+          // Is inactive
+          component._authenticated = true;
+          component.$.modal.fire('closed');
+          expect(Simpla.toggleEditing.called).to.be.false;
         });
 
         describe('persist token', function() {
