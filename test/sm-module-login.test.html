@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+gul<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
@@ -244,13 +244,19 @@
             expect(window.localStorage.getItem('sm-token')).to.equal(token);
           });
 
+          it('should remove the item if token is falsey', function() {
+            var token = null;
+            component.token = token;
+            expect(window.localStorage.hasOwnProperty('sm-token')).to.be.false;
+          });
+
           it('should check window.localStorage initially', function() {
             var validToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3NpbXBsYS5hdXRoMC5jb20vIiwiZXhwIjoyNTY4MjYyNDI2fQ.g78S4_X22L8mjXyGtiANOGTatd3N8-koz5yUMMxRzQ8';
             window.localStorage.setItem('sm-token', validToken);
             document.createElement('sm-module-login');
             expect(Simpla._store.dispatch.lastCall.args[0]).to.deep.equal({
               type: 'login-successful',
-              token: validToken
+              response: validToken
             });
           });
 

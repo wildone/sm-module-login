@@ -57,6 +57,10 @@ export default {
   },
 
   _setTokenInStorage(token) {
-    window.localStorage.setItem(TOKEN_KEY, token);
+    if (token) {
+      window.localStorage.setItem(TOKEN_KEY, token);
+    } else {
+      window.localStorage.removeItem(TOKEN_KEY);
+    }
   }
 }
