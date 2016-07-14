@@ -7,6 +7,7 @@ gul<!DOCTYPE html>
     <script src="../../web-component-tester/browser.js"></script>
     <script src="../../test-fixture/test-fixture-mocha.js"></script>
     <script src="../../web-animations-js/web-animations-next.min.js"></script>
+    <script src="../../promise-polyfill/Promise.js"></script>
     <script>
       window.flushAnimations = function() {
         var promises = document.timeline.getAnimations()
@@ -219,14 +220,17 @@ gul<!DOCTYPE html>
           expect(component.error).to.be.false;
         });
 
-        it('should set the right error message on error', function() {
+        it('should set the right error message on error', function(done) {
           Simpla.login.returns(Promise.reject({ code: 500 }));
 
-          return component.login()
-            .then(flushAnimations)
-            .then(function() {
-              expect(component.$.error.textContent).to.equal(CODES[500]);
-            });
+          component.login();
+
+          // Have to wait on animations, for now flushAnimations seems to be broken on Safari
+          //  so using this instead
+          setTimeout(function() {
+            expect(component.$.error.textContent).to.equal(CODES[500]);
+            done();
+          }, 500);
         });
 
         it('should call login() on submit click', function() {
@@ -319,13 +323,15 @@ gul<!DOCTYPE html>
               });
           });
 
-          it('should show on error = true', function() {
+          it('should show on error = true', function(done) {
             component.error = true;
 
-            return flushAnimations()
-              .then(function() {
-                expect(isHidden(component.$.error)).to.be.false;
-              });
+            // Have to wait on animations, for now flushAnimations seems to be broken on Safari
+            //  so using this instead
+            setTimeout(function() {
+              expect(isHidden(component.$.error)).to.be.false;
+              done();
+            }, 500);
           });
         });
       });
