@@ -7,7 +7,9 @@ gul<!DOCTYPE html>
     <script src="../../web-component-tester/browser.js"></script>
     <script src="../../test-fixture/test-fixture-mocha.js"></script>
     <script src="../../web-animations-js/web-animations-next.min.js"></script>
-    <script src="../../promise-polyfill/Promise.js"></script>
+
+    <link rel="import" href="../../promise-polyfill/promise-polyfill.html">
+
     <script>
       window.flushAnimations = function() {
         var promises = document.timeline.getAnimations()
