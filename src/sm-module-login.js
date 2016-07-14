@@ -103,7 +103,10 @@ inject = () => {
   if (document.body) {
     document.body.appendChild(singleton);
     document.removeEventListener('readystatechange', inject);
+    return true;
   }
+
+  return false;
 }
 
-document.addEventListener('readystatechange', inject);
+inject() || document.addEventListener('readystatechange', inject);

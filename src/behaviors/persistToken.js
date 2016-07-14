@@ -43,7 +43,12 @@ export default {
 
     Simpla.observe('token', token => this.token = token);
 
-    tokenInStorage = window.localStorage.getItem(TOKEN_KEY);
+    try {
+      tokenInStorage = window.localStorage.getItem(TOKEN_KEY);
+    } catch (e) {
+      tokenInStorage = false;
+      console.log('Could not load login token from storage. Are you in Private Mode?');
+    }
 
     if (tokenIsValid(tokenInStorage)) {
       // WARNING: This is private and should be removed in future
@@ -52,15 +57,27 @@ export default {
         response: tokenInStorage
       });
     } else {
-      window.localStorage.removeItem(TOKEN_KEY);
+      try {
+        window.localStorage.removeItem(TOKEN_KEY);
+      } catch (e) {
+        console.warn('Could not remember login token. Are you in Private Mode?');
+      }
     }
   },
 
   _setTokenInStorage(token) {
     if (token) {
-      window.localStorage.setItem(TOKEN_KEY, token);
+      try {
+        window.localStorage.setItem(TOKEN_KEY, token);
+      } catch (e) {
+        console.warn('Could not remember login token. Are you in Private Mode?');
+      }
     } else {
-      window.localStorage.removeItem(TOKEN_KEY);
+      try {
+        window.localStorage.removeItem(TOKEN_KEY);
+      } catch (e) {
+        console.warn('Could not logout. Are you in Private Mode?');
+      }
     }
   }
 }
