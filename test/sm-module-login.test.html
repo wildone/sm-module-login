@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+gul<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
@@ -6,8 +6,36 @@
     <script src="../../webcomponentsjs/webcomponents.min.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
     <script src="../../test-fixture/test-fixture-mocha.js"></script>
-    <link rel="import" href="../../test-fixture/test-fixture.html">
+    <script src="../../web-animations-js/web-animations-next.min.js"></script>
 
+    <link rel="import" href="../../promise-polyfill/promise-polyfill.html">
+
+    <script>
+      window.flushAnimations = function() {
+        var promises = document.timeline.getAnimations()
+          .map(function(animation) {
+            return new Promise(function(resolve) {
+              animation.addEventListener('finish', resolve);
+              animation.finish();
+            });
+          });
+
+        return Promise.all(promises);
+      }
+    </script>
+
+    <link rel="import" href="../../test-fixture/test-fixture.html">
+    <script>
+      window.Simpla = {
+        login: sinon.stub().returns(Promise.resolve()),
+        observe: sinon.stub(),
+        getState: sinon.stub().returns({ authenticated: false }),
+        toggleEditing: sinon.stub(),
+        _store: {
+          dispatch: sinon.stub()
+        }
+      };
+    </script>
     <!-- Import the element to test -->
     <link rel="import" href="../sm-module-login.html">
     <script src="./sm-module-login.fixtures.js"></script>
@@ -34,8 +62,80 @@
           component = fixture('default');
         });
 
+        beforeEach(function() {
+          Simpla.login.reset();
+          Simpla.getState.reset();
+          Simpla.toggleEditing.reset();
+        });
+
         it('is okay', function() {
           expect(component).to.be.ok;
+        });
+
+        it('should observe Simplas authenticated property', function() {
+          expect(Simpla.observe.calledWith('authenticated')).to.be.true;
+        });
+
+        it('should observe Simplas editing property', function() {
+          expect(Simpla.observe.calledWith('editing')).to.be.true;
+        });
+
+        it('should pass a callback to observe that binds _authenticated', function() {
+          var callback = Simpla.observe.withArgs('authenticated').lastCall.args[1];
+
+          expect(callback).to.be.a.function;
+          component._authenticated = false;
+
+          callback(true);
+          expect(component._authenticated).to.be.true;
+        });
+
+        it('should pass a callback to observe that binds _authenticated', function() {
+          var callback = Simpla.observe.withArgs('editing').lastCall.args[1];
+
+          expect(callback).to.be.a.function;
+          component._editing = false;
+
+          callback(true);
+          expect(component._editing).to.be.true;
+        });
+
+        it('should hide / close modal if editing and not authenticated', function() {
+          var truths = [{
+            edit: true,
+            authenticated: false,
+            active: true
+          }, {
+            edit: false,
+            authenticated: false,
+            active: false
+          }, {
+            edit: false,
+            authenticated: true,
+            active: false
+          }, {
+            edit: true,
+            authenticated: true,
+            active: false
+          }];
+
+          truths.forEach(function(truth) {
+            component._editing = truth.edit;
+            component._authenticated = truth.authenticated;
+            expect(component.$.modal.active).to.equal(truth.active);
+          });
+        });
+
+        it('should reset email / pass on detached', function() {
+          var parent = component.parentElement;
+
+          component.email = 'email';
+          component.password = 'password';
+
+          parent.removeChild(component);
+          Polymer.dom.flush();
+          expect(component.password).to.equal('');
+          expect(component.email).to.equal('');
         });
 
         it('calls _triggerErrorOpen when error property added', function(){
@@ -58,19 +158,49 @@
           expect(component._triggerErrorClose.called).to.be.true;
         });
 
-        it('sets error message when error recieved', function() {
-          expect(component._errorMessage).to.not.be.okay;
-          component.$.auth.fire('error', {
-            code: 400
-          });
+        it('sets error code when error recieved', function() {
+          var code = 401,
+              rejection = Promise.reject({ code: code });
 
-          expect(component._errorMessage).to.be.okay;
+          Simpla.login.returns(rejection);
+          expect(component._errorCode).to.not.equal(code);
+
+          return component.login().then(function() {
+            expect(component._errorCode).to.equal(code);
+          });
         });
 
-        it('is busy when auth is busy', function() {
+        it('is busy while logging in is busy', function() {
+          // Setup a promise which can be resolved at a later time
+          var forceResolve,
+              promise = new Promise(function(resolve) { forceResolve = resolve }),
+              loggingIn;
+
+          Simpla.login.returns(promise);
+
+          // Should initially not be busy
           expect(component.busy).to.not.be.true;
-          component.$.auth.busy = true;
+
+          // When login starts, should be busy
+          loggingIn = component.login();
           expect(component.busy).to.be.true;
+
+          // After resolution, shouldn't be busy
+          forceResolve();
+          return loggingIn.then(function() {
+            expect(component.busy).to.not.be.true;
+          });
+        });
+
+        it('should use current email and password to login with', function() {
+          component.email = 'email';
+          component.password = 'password';
+
+          component.login();
+          expect(Simpla.login.lastCall.args[0]).to.deep.equal({
+            email: 'email',
+            password: 'password'
+          });
         });
 
         it('should show busy state on submit button', function() {
@@ -80,7 +210,7 @@
 
         it('should clear any existing error on authenticated', function() {
           component.error = true;
-          component.$.auth.authenticated = true;
+          component._authenticated = true;
 
           expect(component.error).to.be.false;
         });
@@ -93,11 +223,12 @@
         });
 
         it('should set the right error message on error', function(done) {
-          component.$.auth.fire('error', {
-            code: 500
-          });
+          Simpla.login.returns(Promise.reject({ code: 500 }));
 
-          // Wait for animation to finish
+          component.login();
+
+          // Have to wait on animations, for now flushAnimations seems to be broken on Safari
+          //  so using this instead
           setTimeout(function() {
             expect(component.$.error.textContent).to.equal(CODES[500]);
             done();
@@ -105,18 +236,79 @@
         });
 
         it('should call login() on submit click', function() {
-          sinon.stub(component, 'login');
+          sinon.spy(component, 'login');
           component.$.submit.click();
 
           expect(component.login.called).to.be.true;
         });
 
-        it('should bind input values to auth email / password', function() {
-          component.email = 'foobar';
-          component.password = 'secret';
+        it('should stop editing if not authenticated when closing', function() {
+          // Is active
+          component._editing = true;
+          component._authenticated = false;
+          component.$.modal.fire('closed');
+          expect(Simpla.toggleEditing.calledWith(false)).to.be.true;
+        });
 
-          expect(component.$.auth.email).to.equal(component.email);
-          expect(component.$.auth.password).to.equal(component.password);
+        it('should only toggleEditing if closing while login is active', function() {
+          // Is inactive
+          component._editing = false;
+          component._authenticated = false;
+          component.$.modal.fire('closed');
+          expect(Simpla.toggleEditing.called).to.be.false;
+        });
+
+        it('should not stop editing if authenticated when closing', function() {
+          // Is inactive
+          component._authenticated = true;
+          component.$.modal.fire('closed');
+          expect(Simpla.toggleEditing.called).to.be.false;
+        });
+
+        describe('persist token', function() {
+          before(function() {
+            window.localStorage.removeItem('sm-token');
+          });
+
+          afterEach(function() {
+            window.localStorage.removeItem('sm-token');
+          });
+
+          it('should set the token in window.localStorage', function() {
+            var token = 'token';
+            component.token = token;
+            expect(window.localStorage.getItem('sm-token')).to.equal(token);
+          });
+
+          it('should remove the item if token is falsey', function() {
+            var token = null;
+            component.token = token;
+            expect(window.localStorage.hasOwnProperty('sm-token')).to.be.false;
+          });
+
+          it('should check window.localStorage initially', function() {
+            var validToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3NpbXBsYS5hdXRoMC5jb20vIiwiZXhwIjoyNTY4MjYyNDI2fQ.g78S4_X22L8mjXyGtiANOGTatd3N8-koz5yUMMxRzQ8';
+            window.localStorage.setItem('sm-token', validToken);
+            document.createElement('sm-module-login');
+            expect(Simpla._store.dispatch.lastCall.args[0]).to.deep.equal({
+              type: 'login-successful',
+              response: validToken
+            });
+          });
+
+          it('should check if the token is expired, if so it should remove it', function() {
+            var expiredToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0NjgyMjY1MTd9.Cw9FOd3p33No0_02-CZBq0idR2EJNfT0b64xLbBhH6s';
+            window.localStorage.setItem('sm-token', expiredToken);
+            document.createElement('sm-module-login');
+            expect(window.localStorage.getItem('sm-token')).to.not.be.ok;
+          });
+
+          it('should ensure the token was from the correct issuer', function() {
+            var incorrectIssuer = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJyYW5kb20taXNzdWVyIn0.qdgQKJleTfs2EBY_hizfi9P8jVil8RWzMJot2nWM9Jo';
+            window.localStorage.setItem('sm-token', incorrectIssuer);
+            document.createElement('sm-module-login');
+            expect(window.localStorage.getItem('sm-token')).to.not.be.ok;
+          });
         });
 
         describe('show / hide #error depending on error property', function() {
@@ -124,18 +316,20 @@
             return window.getComputedStyle(el).display === 'none';
           };
 
-          it('should hide on error = false', function(done) {
+          it('should hide on error = false', function() {
             component.error = false;
 
-            setTimeout(function() {
-              expect(isHidden(component.$.error)).to.be.true;
-              done();
-            }, 500);
+            return flushAnimations()
+              .then(function() {
+                expect(isHidden(component.$.error)).to.be.true;
+              });
           });
 
           it('should show on error = true', function(done) {
             component.error = true;
 
+            // Have to wait on animations, for now flushAnimations seems to be broken on Safari
+            //  so using this instead
             setTimeout(function() {
               expect(isHidden(component.$.error)).to.be.false;
               done();

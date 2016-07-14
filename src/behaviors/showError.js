@@ -11,13 +11,6 @@ export default {
   ],
 
   _triggerError(error) {
-    /**
-     * Temporarily hard-code error message
-     */
-    // if (this._errorCode === undefined) {
-    //   return;
-    // }
-
     if (error) {
       this._triggerErrorOpen();
     } else {
@@ -65,15 +58,11 @@ export default {
 
     modalAnimation = modal.target.animate(modal.frames, modal.opts);
 
-    /**
-     * Temporarily hard-code error message
-     */
     modalAnimation.onfinish = () => {
-      this.errorMessage = 'Wrong username or password';
-      this.toggleAttribute('visible', true, this.$.error)
+      this.errorMessage = CODES[this._errorCode || 500];
+      this.toggleAttribute('visible', true, this.$.error);
       error.target.animate(error.frames, error.opts);
     };
-
   },
 
   _triggerErrorClose() {

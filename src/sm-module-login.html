@@ -2,8 +2,6 @@
 <link rel="import" href="../sm-ui-core/sm-ui-core.html">
 <link rel="import" href="../sm-ui-modal/sm-ui-modal.html">
 <link rel="import" href="../sm-ui-button/sm-ui-button.html">
-<link rel="import" href="../sm-utility-auth/sm-utility-auth.html">
-
 
 <dom-module id="sm-module-login">
   <template>
@@ -11,7 +9,7 @@
     <style include="sm-css"></style>
     <link rel="stylesheet" href="./sm-module-login.css" inline/>
 
-    <sm-ui-modal class="login" id="modal" title="Login" active>
+    <sm-ui-modal class="login" id="modal" title="Login" on-closed="_handleModalClosed" active="[[active]]">
 
       <form on-submit="login" class="login__form" id="form">
         <input id="email" class="login__form__input" value={{email::input}} type="text" placeholder="Enter your email" />
@@ -23,16 +21,6 @@
         <input type="submit" class="login__form__submit--target" />
       </form>
     </sm-ui-modal>
-
-    <sm-utility-auth
-      id="auth"
-      on-error="_handleError"
-      busy="{{busy}}"
-      authenticated="{{_authenticated}}"
-      email="[[email]]"
-      password="[[password]]"
-      >
-    </sm-utility-auth>
   </template>
   <script src="./sm-module-login.js" inline></script>
 </dom-module>
