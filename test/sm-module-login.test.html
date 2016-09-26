@@ -265,6 +265,13 @@ gul<!DOCTYPE html>
           expect(Simpla.toggleEditing.called).to.be.false;
         });
 
+        it('should be hidden when not active, but not necessarily the opposite', function() {
+          component.hidden = true;
+          component._editing = true;
+          component._authenticated = false;
+          expect(component.hidden).to.be.false;
+        });
+
         describe('persist token', function() {
           before(function() {
             window.localStorage.removeItem('sm-token');
