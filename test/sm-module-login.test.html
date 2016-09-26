@@ -272,6 +272,14 @@ gul<!DOCTYPE html>
           expect(component.hidden).to.be.false;
         });
 
+        it('should not be able to exit the modal while busy', function() {
+          component.busy = false;
+          expect(component.$.modal.noExit).to.be.false;
+
+          component.busy = true;
+          expect(component.$.modal.noExit).to.be.true;
+        });
+
         describe('persist token', function() {
           before(function() {
             window.localStorage.removeItem('sm-token');
