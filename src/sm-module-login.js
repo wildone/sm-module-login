@@ -15,6 +15,7 @@ class SmModuleLogin {
       password: String,
       active: {
         type: Boolean,
+        observer: '_activeChanged',
         computed: '_computeActive(_editing, _authenticated)'
       },
       _errorCode: Number,
@@ -90,6 +91,12 @@ class SmModuleLogin {
       Simpla.toggleEditing(false);
     }
   }
+
+  _activeChanged(active) {
+    if (active) {
+      this.hidden = false;
+    }
+  }
 }
 
 // Register with Polymer
@@ -98,6 +105,9 @@ Polymer(SmModuleLogin);
 // Setup and
 let singleton = document.createElement('sm-module-login'),
     inject;
+
+// Singleton should be hidden by default
+singleton.setAttribute('hidden', '');
 
 inject = () => {
   if (document.body) {
