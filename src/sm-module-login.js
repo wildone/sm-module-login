@@ -106,8 +106,10 @@ Polymer(SmModuleLogin);
 let singleton = document.createElement('sm-module-login'),
     inject;
 
-// Singleton should be hidden by default
-singleton.setAttribute('hidden', '');
+// Singleton should be hidden by default iff singleton is not already active
+if (!singleton.active) {
+  singleton.setAttribute('hidden', '');  
+}
 
 inject = () => {
   if (document.body) {
