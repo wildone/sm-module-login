@@ -22,11 +22,11 @@ class SmModuleLogin {
       _authenticated: {
         type: Boolean,
         observer: '_authenticationChanged',
-        value: Simpla.getState().authenticated
+        value: Simpla._v1.getState().authenticated
       },
       _editing: {
         type: Boolean,
-        value: Simpla.getState().editing
+        value: Simpla._v1.getState().editing
       }
     }
   }
@@ -39,11 +39,11 @@ class SmModuleLogin {
   }
 
   created() {
-    Simpla.observe('authenticated', (authenticated) => {
+    Simpla._v1.observe('authenticated', (authenticated) => {
       this._authenticated = authenticated;
     });
 
-    Simpla.observe('editing', (editing) => {
+    Simpla._v1.observe('editing', (editing) => {
       this._editing = editing;
     });
   }
@@ -60,7 +60,7 @@ class SmModuleLogin {
     }
 
     this.busy = true;
-    return Simpla.login({ email: this.email, password: this.password })
+    return Simpla._v1.login({ email: this.email, password: this.password })
       .catch(error => this._handleError(error))
       .then(() => this.busy = false);
   }
@@ -88,7 +88,7 @@ class SmModuleLogin {
 
   _handleModalClosed() {
     if (!this._authenticated && this.active) {
-      Simpla.toggleEditing(false);
+      Simpla._v1.toggleEditing(false);
     }
   }
 
@@ -108,7 +108,7 @@ let singleton = document.createElement('sm-module-login'),
 
 // Singleton should be hidden by default iff singleton is not already active
 if (!singleton.active) {
-  singleton.setAttribute('hidden', '');  
+  singleton.setAttribute('hidden', '');
 }
 
 inject = () => {

@@ -41,7 +41,7 @@ export default {
   ready() {
     let tokenInStorage;
 
-    Simpla.observe('token', token => this.token = token);
+    Simpla._v1.observe('token', token => this.token = token);
 
     try {
       tokenInStorage = window.localStorage.getItem(TOKEN_KEY);
@@ -52,7 +52,7 @@ export default {
 
     if (tokenIsValid(tokenInStorage)) {
       // WARNING: This is private and should be removed in future
-      Simpla._store.dispatch({
+      Simpla._v1._store.dispatch({
         type: 'login-successful',
         response: tokenInStorage
       });
