@@ -27,12 +27,14 @@ gul<!DOCTYPE html>
     <link rel="import" href="../../test-fixture/test-fixture.html">
     <script>
       window.Simpla = {
-        login: sinon.stub().returns(Promise.resolve()),
-        observe: sinon.stub(),
-        getState: sinon.stub().returns({ authenticated: false }),
-        toggleEditing: sinon.stub(),
-        _store: {
-          dispatch: sinon.stub()
+        _v1: {
+          login: sinon.stub().returns(Promise.resolve()),
+          observe: sinon.stub(),
+          getState: sinon.stub().returns({ authenticated: false }),
+          toggleEditing: sinon.stub(),
+          _store: {
+            dispatch: sinon.stub()
+          }
         }
       };
     </script>
@@ -63,9 +65,9 @@ gul<!DOCTYPE html>
         });
 
         beforeEach(function() {
-          Simpla.login.reset();
-          Simpla.getState.reset();
-          Simpla.toggleEditing.reset();
+          Simpla._v1login.reset();
+          Simpla._v1getState.reset();
+          Simpla._v1toggleEditing.reset();
         });
 
         it('is okay', function() {
@@ -73,15 +75,15 @@ gul<!DOCTYPE html>
         });
 
         it('should observe Simplas authenticated property', function() {
-          expect(Simpla.observe.calledWith('authenticated')).to.be.true;
+          expect(Simpla._v1observe.calledWith('authenticated')).to.be.true;
         });
 
         it('should observe Simplas editing property', function() {
-          expect(Simpla.observe.calledWith('editing')).to.be.true;
+          expect(Simpla._v1observe.calledWith('editing')).to.be.true;
         });
 
         it('should pass a callback to observe that binds _authenticated', function() {
-          var callback = Simpla.observe.withArgs('authenticated').lastCall.args[1];
+          var callback = Simpla._v1observe.withArgs('authenticated').lastCall.args[1];
 
           expect(callback).to.be.a.function;
           component._authenticated = false;
@@ -91,7 +93,7 @@ gul<!DOCTYPE html>
         });
 
         it('should pass a callback to observe that binds _authenticated', function() {
-          var callback = Simpla.observe.withArgs('editing').lastCall.args[1];
+          var callback = Simpla._v1observe.withArgs('editing').lastCall.args[1];
 
           expect(callback).to.be.a.function;
           component._editing = false;
@@ -162,7 +164,7 @@ gul<!DOCTYPE html>
           var code = 401,
               rejection = Promise.reject({ code: code });
 
-          Simpla.login.returns(rejection);
+          Simpla._v1login.returns(rejection);
           expect(component._errorCode).to.not.equal(code);
 
           return component.login().then(function() {
@@ -176,7 +178,7 @@ gul<!DOCTYPE html>
               promise = new Promise(function(resolve) { forceResolve = resolve }),
               loggingIn;
 
-          Simpla.login.returns(promise);
+          Simpla._v1login.returns(promise);
 
           // Should initially not be busy
           expect(component.busy).to.not.be.true;
@@ -197,7 +199,7 @@ gul<!DOCTYPE html>
           component.password = 'password';
 
           component.login();
-          expect(Simpla.login.lastCall.args[0]).to.deep.equal({
+          expect(Simpla._v1login.lastCall.args[0]).to.deep.equal({
             email: 'email',
             password: 'password'
           });
@@ -223,7 +225,7 @@ gul<!DOCTYPE html>
         });
 
         it('should set the right error message on error', function(done) {
-          Simpla.login.returns(Promise.reject({ code: 500 }));
+          Simpla._v1login.returns(Promise.reject({ code: 500 }));
 
           component.login();
 
@@ -247,7 +249,7 @@ gul<!DOCTYPE html>
           component._editing = true;
           component._authenticated = false;
           component.$.modal.fire('closed');
-          expect(Simpla.toggleEditing.calledWith(false)).to.be.true;
+          expect(Simpla._v1toggleEditing.calledWith(false)).to.be.true;
         });
 
         it('should only toggleEditing if closing while login is active', function() {
@@ -255,14 +257,14 @@ gul<!DOCTYPE html>
           component._editing = false;
           component._authenticated = false;
           component.$.modal.fire('closed');
-          expect(Simpla.toggleEditing.called).to.be.false;
+          expect(Simpla._v1toggleEditing.called).to.be.false;
         });
 
         it('should not stop editing if authenticated when closing', function() {
           // Is inactive
           component._authenticated = true;
           component.$.modal.fire('closed');
-          expect(Simpla.toggleEditing.called).to.be.false;
+          expect(Simpla._v1toggleEditing.called).to.be.false;
         });
 
         it('should be hidden when not active, but not necessarily the opposite', function() {
@@ -305,7 +307,7 @@ gul<!DOCTYPE html>
             var validToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3NpbXBsYS5hdXRoMC5jb20vIiwiZXhwIjoyNTY4MjYyNDI2fQ.g78S4_X22L8mjXyGtiANOGTatd3N8-koz5yUMMxRzQ8';
             window.localStorage.setItem('sm-token', validToken);
             document.createElement('sm-module-login');
-            expect(Simpla._store.dispatch.lastCall.args[0]).to.deep.equal({
+            expect(Simpla._v1_store.dispatch.lastCall.args[0]).to.deep.equal({
               type: 'login-successful',
               response: validToken
             });
